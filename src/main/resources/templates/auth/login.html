@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+
+</head>
+
+<body>
+    <div th:insert="~{index :: navbar}"></div>
+    <div class="vh-100">
+        <div class="container">
+            <div class="row col-md-6 offset-md-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                Email o password errati.
+                            </div>
+                        </div>
+                        <div th:if="${param.logout}">
+                            <div class="alert alert-success">
+                                Disconnesso.
+                            </div>
+                        </div>
+                        <h1 class="text-center">Login</h1>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/login}" method="post"  role="form">
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" th:field="*{email}"
+                                    placeholder="Inserisci la tua email" name="email">
+                                
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" th:field="*{password}"
+                                    placeholder="Inserisci la tua password" name="password">
+                                
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                                <span><a th:href="@{/register}">Non hai un account? Registrati</a></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
