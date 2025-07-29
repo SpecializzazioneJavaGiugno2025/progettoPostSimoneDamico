@@ -52,6 +52,6 @@ public class UserController {
                 userService.saveUser(userDto, redirectAttributes, request, response);
 
                 redirectAttributes.addFlashAttribute("success", "Registrazione avvenuta con successo");
-                return "redirect:/register?success";
+                return "redirect:/";
     }
 }

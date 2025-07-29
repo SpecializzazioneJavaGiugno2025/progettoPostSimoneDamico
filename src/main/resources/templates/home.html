@@ -5,6 +5,11 @@
 </head>
 <body>
     <div th:insert="~{index :: navbar}"></div>
+    <div th:if="${param.notAuthorized}">
+        <div class="alert alert-dander">
+            Non sei autorizzato ad accedere a questa pagina!
+        </div>
+    </div>
     
 </body>
 </html>
