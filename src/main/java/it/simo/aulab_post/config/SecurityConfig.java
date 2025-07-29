@@ -34,7 +34,7 @@ public class SecurityConfig {
                 authorize
                     .requestMatchers("/register/**").permitAll()
                     .requestMatchers("/register").permitAll()
-                    .requestMatchers("/login").permitAll()
+                    
                     .anyRequest().authenticated()
             )
             .formLogin(form -> 
