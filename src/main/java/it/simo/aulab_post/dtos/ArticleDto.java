@@ -1,6 +1,7 @@
 package it.simo.aulab_post.dtos;
 
 import it.simo.aulab_post.models.Category;
+import it.simo.aulab_post.models.Image;
 import it.simo.aulab_post.models.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +18,5 @@ public class ArticleDto {
     private String publish_date;
     private User user;
     private Category category;
+    private Image image;
 }
