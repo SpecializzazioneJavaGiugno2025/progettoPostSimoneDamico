@@ -51,6 +51,7 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Async
+    @Override
     public CompletableFuture<String> saveImageOnCloud(MultipartFile file) throws Exception {
         if(!file.isEmpty()){
             try{

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:insert="~{index :: head}"></head>
+
 <body>
 
     <div th:insert="~{index :: navbar}"></div>
@@ -13,17 +15,22 @@
                         <div class="card-header">
                             <h1 class="text-center" th:text="${title}">Crea un nuovo articolo</h1>
                         </div>
+                        
                         <div class="card-body">
-                            <form th:action="@{/articles}" method="post" th:object="${article}" enctype="multipart/form-data">
+                            <form th:action="@{/articles}" method="post" th:object="${article}"
+                                enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Titolo</label>
                                     <input type="text" class="form-control" id="title" th:field="*{title}" required>
-                                    <p th:errors="*{title}" class="text-danger" th:if="${#fields.hasErrors('title')}"></p>
+                                    <p th:errors="*{title}" class="text-danger" th:if="${#fields.hasErrors('title')}">
+                                    </p>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="content" class="form-label">Sottotitolo</label>
-                                    <input type="text" class="form-control" id="content" th:field="*{subtitle}" required>
-                                    <p th:errors="*{subtitle}" class="text-danger" th:if="${#fields.hasErrors('subtitle')}"></p>
+                                    <label for="subtitle" class="form-label">Sottotitolo</label>
+                                    <input type="text" class="form-control" id="subtitle" th:field="*{subtitle}"
+                                        required>
+                                    <p th:errors="*{subtitle}" class="text-danger"
+                                        th:if="${#fields.hasErrors('subtitle')}"></p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="body" class="form-label">Articolo</label>
@@ -32,15 +39,19 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Data</label>
-                                    <input type="date" class="form-control" id="date" th:field="*{publishDate}" required placeholder="yyyyMMdd" max="8">
-                                    <p th:errors="*{publishDate}" class="text-danger" th:if="${#fields.hasErrors('publishDate')}"></p>
+                                    <input type="date" class="form-control" id="date" th:field="*{publish_date}"
+                                        required placeholder="yyyyMMdd" >
+                                    <p th:errors="*{publish_date}" class="text-danger"
+                                        th:if="${#fields.hasErrors('publish_date')}"></p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Categoria</label>
                                     <select th:field="*{category}" class="form-select" id="category">
-                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                        <option th:each="category : ${categories}" th:value="${category.id}"
+                                            th:text="${category.name}"></option>
                                     </select>
-                                    <p th:errors="*{category}" class="text-danger" th:if="${#fields.hasErrors('category')}"></p>
+                                    <p th:errors="*{category}" class="text-danger"
+                                        th:if="${#fields.hasErrors('category')}"></p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Immagine</label>
@@ -58,6 +69,7 @@
     <div th:insert="~{index :: footer}"></div>
 
     <div th:replace="~{index :: bootstrapScript}"></div>
-    
+
 </body>
+
 </html>

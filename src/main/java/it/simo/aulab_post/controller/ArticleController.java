@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +22,8 @@ import it.simo.aulab_post.dtos.ArticleDto;
 import it.simo.aulab_post.dtos.CategoryDto;
 import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Category;
-import it.simo.aulab_post.services.CrudService;
 import it.simo.aulab_post.services.ArticleService;
+import it.simo.aulab_post.services.CrudService;
 import jakarta.validation.Valid;
 
 @Controller
@@ -42,14 +43,14 @@ public class ArticleController {
         List<ArticleDto> articles = articleService.readAll();
         Collections.sort(articles,Comparator.comparing(ArticleDto::getPublish_date).reversed());
         viewmModel.addAttribute("articles",articles);
-        return "article/articles";
+        return "articles/articles";
     }
 
     @GetMapping("create")
     public String articleCreate(Model viewModel) {
-        viewModel.addAttribute("title","crea un articolo");
+        viewModel.addAttribute("title","Crea un articolo");
         viewModel.addAttribute("article", new Article());
-        viewModel.addAttribute("category",categoryService.readAll());
+        viewModel.addAttribute("categories",categoryService.readAll());
         return "articles/create";
     }
 
@@ -61,13 +62,20 @@ public class ArticleController {
             MultipartFile file,
             Model viewModel) {
         if(result.hasErrors()) {
-            viewModel.addAttribute("title","crea un articolo");
+            viewModel.addAttribute("title","Crea un articolo");
             viewModel.addAttribute("article", article);
-            viewModel.addAttribute("category",categoryService.readAll());
+            viewModel.addAttribute("categories",categoryService.readAll());
             return "articles/create";
         }
         articleService.create(article, principal, file);
         redirectAttributes.addFlashAttribute("message", "Articolo creato con successo");
         return "redirect:/";
+    }
+
+    @GetMapping("details/{id}")
+    public String articleDetails(@PathVariable("id") Long id, Model viewModel) {
+        viewModel.addAttribute("title","Dettagli articolo");
+        viewModel.addAttribute("article", articleService.read(id));
+        return "articles/details";
     }
 }

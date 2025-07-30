@@ -14,4 +14,5 @@ public interface UserService {
     void saveUser(UserDto userDto,RedirectAttributes redirectAttributes,HttpServletRequest request,
     HttpServletResponse response);
     User findUserByEmail(String email);
+    User find(Long id);
 }

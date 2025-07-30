@@ -1,5 +1,7 @@
 package it.simo.aulab_post.dtos;
 
+import java.time.LocalDate;
+
 import it.simo.aulab_post.models.Category;
 import it.simo.aulab_post.models.Image;
 import it.simo.aulab_post.models.User;
@@ -15,7 +17,7 @@ public class ArticleDto {
     private String title;
     private String subtitle;
     private String body;
-    private String publish_date;
+    private LocalDate publish_date;
     private User user;
     private Category category;
     private Image image;

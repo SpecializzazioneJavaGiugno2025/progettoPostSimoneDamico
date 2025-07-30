@@ -2,6 +2,8 @@ package it.simo.aulab_post.models;
 
 
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -43,12 +45,12 @@ public class Article {
 
     @Column(nullable = false, length=1000)
     @NotEmpty
-    @Size(min = 2, max = 1000)
+    @Size(max = 1000)
     private String body;
 
     @Column(nullable = true, length=8)
     @NotNull
-    private String publish_date;
+    private LocalDate publish_date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

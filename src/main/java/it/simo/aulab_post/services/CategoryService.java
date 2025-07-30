@@ -23,7 +23,7 @@ public class CategoryService implements CrudService<CategoryDto, Category, Long>
 
     @Override
     public List<CategoryDto> readAll() {
-       List<CategoryDto> dtos = new ArrayList<CategoryDto>();
+       List<CategoryDto> dtos = new ArrayList<>();
        for(Category category: categoryRepository.findAll()) {
            dtos.add(modelMapper.map(category, CategoryDto.class));
        }
@@ -32,7 +32,7 @@ public class CategoryService implements CrudService<CategoryDto, Category, Long>
 
     @Override
     public CategoryDto read(Long key) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return modelMapper.map(categoryRepository.findById(key).get(), CategoryDto.class);
     }
 
     @Override
