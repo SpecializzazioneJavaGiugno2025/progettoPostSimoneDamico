@@ -14,6 +14,7 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-SnHiSwK+bZpgRis44uWJZk1LJAj9/2PKPKZ5OjA6jSTA86w+f5b2TKmRfyXn3FpMOYcfN/9KglocSWr3M6Axw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+<script src="https://kit.fontawesome.com/a18020067a.js" crossorigin="anonymous"></script>
 
     <title th:text="${title}">Title</title>
 </head>
@@ -35,6 +36,22 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/articles">Tutti gli articoli</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="d-flex">
+                            <a class="nav-link" href="/admin/dashboard"> Dashboard admin</a>
+                            <div class="mt-1" th:if="${careerRequests > 0}">
+                                <i class="fas fa-bell fa-1 pt-2"></i>
+                                <span class="badge rounded-pill bg-danger text-white px-1" th:text="${careerRequests}"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_REVISOR')">
+                        <a href="/revisor/dashboard" class="nav-link">Dashboard revisore</a>
+                        <div class="mt-1" th:if="${articlesToBeRevised >0}">
+                            <i class="fas fa-bell fa-1 pt-2"></i>
+                            <span class="badge rounded-pill bg-danger text-white px-1" th:text="${articlesToBeRevised}"></span>
+                        </div>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -72,7 +89,7 @@
                 </div>
                 <div class="col-md-4 mb-3 text-end">
                     <h5>Lavora con noi</h5>
-                    <a href="#" class="btn btn-primary">Richiedi</a>
+                    <a href="/operations/career/request" class="btn btn-primary">Richiedi</a>
                 </div>
             </div>
         </div>

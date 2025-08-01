@@ -50,7 +50,10 @@ public class Article {
 
     @Column(nullable = true, length=8)
     @NotNull
-    private LocalDate publish_date;
+    private LocalDate publishDate;
+
+    @Column(nullable = true)
+    private Boolean isAccepted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

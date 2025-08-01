@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head th:insert="index :: head">
-
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}">
+    
 </head>
-
 <body>
     <div th:insert="~{index :: navbar}"></div>
     <div class="min-vh-100">
@@ -26,7 +24,7 @@
                     <div class="card mb-3" style="width: 18rem;">
                         <img th:if="${article.image != null}" th:src="${article.image.path}" alt=""
                             class="card-img-top">
-                        <img th:unless="${article.image != null}" th:src="${/images/default.jpg}" alt=""
+                        <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" alt=""
                             class="card-img-top">
 
                         <div class="card-body">

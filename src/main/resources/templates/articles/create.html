@@ -39,10 +39,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Data</label>
-                                    <input type="date" class="form-control" id="date" th:field="*{publish_date}"
+                                    <input type="date" class="form-control" id="date" th:field="*{publishDate}"
                                         required placeholder="yyyyMMdd" >
-                                    <p th:errors="*{publish_date}" class="text-danger"
-                                        th:if="${#fields.hasErrors('publish_date')}"></p>
+                                    <p th:errors="*{publishDate}" class="text-danger"
+                                        th:if="${#fields.hasErrors('publishDate')}"></p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Categoria</label>
@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Immagine</label>
-                                    <input class="form-control" type="file" id="image" name="image">
+                                    <input class="form-control" type="file" id="image" name="file">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Crea</button>
                             </form>

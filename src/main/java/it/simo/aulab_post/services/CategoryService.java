@@ -6,12 +6,16 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import it.simo.aulab_post.dtos.CategoryDto;
+import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Category;
 import it.simo.aulab_post.repositories.CategoryRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CategoryService implements CrudService<CategoryDto, Category, Long> {
@@ -37,17 +41,35 @@ public class CategoryService implements CrudService<CategoryDto, Category, Long>
 
     @Override
     public CategoryDto create(Category model, Principal principal, MultipartFile file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return modelMapper.map(categoryRepository.save(model),CategoryDto.class);
     }
 
     @Override
     public CategoryDto update(Long key, Category model, MultipartFile file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(categoryRepository.existsById(key)) {
+            model.setId(key);
+            return modelMapper.map(categoryRepository.save(model),CategoryDto.class);
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
+    @Transactional
     public void delete(Long key) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(categoryRepository.existsById(key)) {
+            Category category = categoryRepository.findById(key).get();
+            if(category.getArticles()!=null) {
+                Iterable<Article> articles = category.getArticles();
+                for(Article article: articles) {
+                    article.setCategory(null);
+                }
+            }
+
+            categoryRepository.deleteById(key);
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
 

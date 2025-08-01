@@ -1,10 +1,12 @@
 package it.simo.aulab_post.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.dtos.ArticleDto;
 import it.simo.aulab_post.dtos.UserDto;
+import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.User;
+import it.simo.aulab_post.repositories.ArticleRepository;
+import it.simo.aulab_post.repositories.CareerRequestRepository;
 import it.simo.aulab_post.services.ArticleService;
+import it.simo.aulab_post.services.CategoryService;
 import it.simo.aulab_post.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,12 +39,28 @@ public class UserController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("/")
-    public String home() {
+    @Autowired
+    private CategoryService categoryService;
 
-        List<ArticleDto> articles = articleService.readAll();
-        Collections.sort(articles,Comparator.comparing(ArticleDto::getPublish_date).reversed());
-        List<ArticleDto> lastArticles =articles.stream().limit(3).collect(Collectors.toList());
+    @Autowired
+    private CareerRequestRepository careerRequestRepository;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @GetMapping("/")
+    public String home(Model viewModel) {
+
+        List<ArticleDto> articles = new ArrayList<>();
+        for(Article article: articleRepository.findByIsAcceptedTrue()) {
+            articles.add(modelMapper.map(article, ArticleDto.class));
+        }
+        Collections.sort(articles,Comparator.comparing(ArticleDto::getPublishDate).reversed());
+        List<ArticleDto> lastArticles =articles.stream().filter(article-> Boolean.TRUE.equals(article.getIsAccepted())).limit(3).collect(Collectors.toList());
+        viewModel.addAttribute("articles", lastArticles);
 
         return "home";
     }
@@ -77,7 +99,24 @@ public class UserController {
         viewModel.addAttribute("title", "Tutti gli articoli trovati per utente: "+user.getUsername());
 
         List<ArticleDto> articles = articleService.searchByAuthor(user);
-        viewModel.addAttribute("articles",articles);
+                List<ArticleDto> acceptedArticles=articles.stream().filter(article-> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+
+        viewModel.addAttribute("articles",acceptedArticles);
         return "article/articles";
+    }
+
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model viewModel){
+        viewModel.addAttribute("title", "Richieste ricevute");
+        viewModel.addAttribute("requests",careerRequestRepository.findByIsCheckedFalse());
+        viewModel.addAttribute("categories",categoryService.readAll());
+        return "admin/dashboard";
+    }
+
+    @GetMapping("/revisor/dashboard")
+    public String revisorDashboard(Model viewModel){
+        viewModel.addAttribute("title", "Articoli da revisionare");
+        viewModel.addAttribute("articles",articleRepository.findByIsAcceptedIsNull());
+        return "revisor/dashboard";
     }
 }
