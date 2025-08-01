@@ -36,6 +36,7 @@ public class SecurityConfig {
                     .requestMatchers("/register","/","/articles","/images/**", "/articles/detail/**","/search/**","/articles/search").permitAll()
                     .requestMatchers("/admin/dashboard","/categories/create","/categories/edit/**","/categories/delete/**","/categories/update/**").hasRole("ADMIN")
                     .requestMatchers("/revisor/dashboard","/revisor/detail({id})","accept").hasRole("REVISOR")
+                    .requestMatchers("/writerdashboard","/articles/create","/articles/edit/{id}","/articles/update/{id}","/articles/delete/{id}").hasRole("WRITER")
                     .anyRequest().authenticated()
             )
             .formLogin(form -> 

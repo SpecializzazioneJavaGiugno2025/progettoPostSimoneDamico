@@ -25,7 +25,6 @@ import it.simo.aulab_post.repositories.UserRepository;
 @Service
 public class ArticleService implements CrudService<ArticleDto, Article, Long> {
 
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -34,10 +33,11 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
     private ArticleRepository articleRepository;
     @Autowired
     private ImageService imageService;
+
     @Override
     public List<ArticleDto> readAll() {
-        List<ArticleDto> dtos= new ArrayList<>();
-        for(Article article: articleRepository.findAll()) {
+        List<ArticleDto> dtos = new ArrayList<>();
+        for (Article article : articleRepository.findAll()) {
             dtos.add(modelMapper.map(article, ArticleDto.class));
         }
         return dtos;
@@ -45,76 +45,124 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
 
     @Override
     public ArticleDto read(Long key) {
-        Optional<Article> optArticle=articleRepository.findById(key);
-        if(optArticle.isPresent()) {
+        Optional<Article> optArticle = articleRepository.findById(key);
+        if (optArticle.isPresent()) {
             return modelMapper.map(optArticle.get(), ArticleDto.class);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Articolo non trovato");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Articolo non trovato");
         }
 
     }
 
     @Override
     public ArticleDto create(Article article, Principal principal, MultipartFile file) {
-        String url="";
+        String url = "";
 
-        Authentication authentication =SecurityContextHolder.getContext().getAuthentication();
-        if(authentication!=null) {
-            CustomUserDetails userDetails= (CustomUserDetails) authentication.getPrincipal();
-            User user=(userRepository.findById(userDetails.getId())).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User user = (userRepository.findById(userDetails.getId())).get();
             article.setUser(user);
         }
-        if(!file.isEmpty()) {
-           try{ CompletableFuture<String> futureUrl=imageService.saveImageOnCloud(file);
-            url=futureUrl.get();
-           }catch(Exception e) {
-           }
+        if (!file.isEmpty()) {
+            try {
+                CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+                url = futureUrl.get();
+            } catch (Exception e) {
+            }
         }
 
         article.setIsAccepted(null);
-        ArticleDto dto= modelMapper.map(articleRepository.save(article), ArticleDto.class);
+        ArticleDto dto = modelMapper.map(articleRepository.save(article), ArticleDto.class);
 
-        if(!file.isEmpty()) {
-            imageService.saveImageOnDb(url,article);
+        if (!file.isEmpty()) {
+            imageService.saveImageOnDb(url, article);
         }
         return dto;
     }
 
     @Override
-    public ArticleDto update(Long key, Article model, MultipartFile file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ArticleDto update(Long key, Article updateArticle, MultipartFile file) {
+        String url = "";
+        updateArticle.setId(key);
+        Article article = articleRepository.findById(key).get();
+
+        if (!file.isEmpty()) {
+            try {
+                imageService.deleteImage(article.getImage().getPath());
+                try {
+                    CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
+                    url = futureUrl.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                imageService.saveImageOnDb(url, updateArticle);
+
+                updateArticle.setIsAccepted(null);
+                return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (article.getImage() == null) {
+            updateArticle.setIsAccepted(null);
+        } else {
+            updateArticle.setImage(article.getImage());
+            if (updateArticle.equals(article) == false) {
+                updateArticle.setIsAccepted(null);
+            } else {
+                updateArticle.setIsAccepted(article.getIsAccepted());
+            }
+            return modelMapper.map(articleRepository.save(updateArticle), ArticleDto.class);
+
+        }
+        return null;
+
     }
 
     @Override
     public void delete(Long key) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (articleRepository.existsById(key)) {
+            Article article = articleRepository.findById(key).get();
+            try {
+                String path = article.getImage().getPath();
+                article.getImage().setArticle(null);
+                imageService.deleteImage(path);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            articleRepository.deleteById(key);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public List<ArticleDto> searchByCategory(Category category){
-        List<ArticleDto> dtos= new ArrayList<>();
-        for(Article article: articleRepository.findByCategory(category)) {
+    public List<ArticleDto> searchByCategory(Category category) {
+        List<ArticleDto> dtos = new ArrayList<>();
+        for (Article article : articleRepository.findByCategory(category)) {
             dtos.add(modelMapper.map(article, ArticleDto.class));
         }
         return dtos;
     }
 
-    public List<ArticleDto> searchByAuthor(User user){
-        List<ArticleDto> dtos= new ArrayList<>();
-        for(Article article: articleRepository.findByUser(user)) {
+    public List<ArticleDto> searchByAuthor(User user) {
+        List<ArticleDto> dtos = new ArrayList<>();
+        for (Article article : articleRepository.findByUser(user)) {
             dtos.add(modelMapper.map(article, ArticleDto.class));
         }
         return dtos;
     }
 
-    public void setIsAccepted(Boolean bool, Long id){
-        Article article= articleRepository.findById(id).get();
+    public void setIsAccepted(Boolean bool, Long id) {
+        Article article = articleRepository.findById(id).get();
         article.setIsAccepted(bool);
         articleRepository.save(article);
     }
 
-    public List<ArticleDto> search(String keyword){
-        List<ArticleDto> dtos= new ArrayList<>();
-        for(Article article: articleRepository.search(keyword)) {
+    public List<ArticleDto> search(String keyword) {
+        List<ArticleDto> dtos = new ArrayList<>();
+        for (Article article : articleRepository.search(keyword)) {
             dtos.add(modelMapper.map(article, ArticleDto.class));
         }
         return dtos;
