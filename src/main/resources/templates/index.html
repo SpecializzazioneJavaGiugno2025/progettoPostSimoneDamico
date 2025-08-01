@@ -73,6 +73,10 @@
                     Benvenuto
                 </div>
             </div>
+            <form th:action="@{/articles/search}" class="d-flex" method="get">
+                <input type="search" class="form-control me-2" name="keyword" aria-label="Search" placeholder="Cerca...">
+                <button type="submit" class="btn btn-outline-success">Cerca</button>
+            </form>
             
         </div>
         
