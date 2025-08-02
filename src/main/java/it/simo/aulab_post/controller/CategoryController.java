@@ -42,7 +42,7 @@ public class CategoryController {
         List<ArticleDto> articles = articleService.searchByCategory(modelMapper.map(category, Category.class));
         List<ArticleDto> acceptedArticles=articles.stream().filter(article-> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
         viewModel.addAttribute("articles", acceptedArticles);
-        return "article/articles";
+        return "articles/articles";
     }
 
     @GetMapping("create")

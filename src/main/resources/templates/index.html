@@ -14,7 +14,7 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-SnHiSwK+bZpgRis44uWJZk1LJAj9/2PKPKZ5OjA6jSTA86w+f5b2TKmRfyXn3FpMOYcfN/9KglocSWr3M6Axw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-<script src="https://kit.fontawesome.com/a18020067a.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a18020067a.js" crossorigin="anonymous"></script>
 
     <title th:text="${title}">Title</title>
 </head>
@@ -38,23 +38,27 @@
                         <a class="nav-link" href="/articles">Tutti gli articoli</a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
-                        <div class="d-flex">
-                            <a class="nav-link" href="/admin/dashboard"> Dashboard admin</a>
-                            <div class="mt-1" th:if="${careerRequests > 0}">
+
+                        <a class="nav-link d-flex" href="/admin/dashboard"> Dashboard admin
+                            <div class="px-2" th:if="${careerRequests > 0}">
                                 <i class="fas fa-bell fa-1 pt-2"></i>
-                                <span class="badge rounded-pill bg-danger text-white px-1" th:text="${careerRequests}"></span>
+                                <span class="badge rounded-pill bg-danger text-white px-1"
+                                    th:text="${careerRequests}"></span>
                             </div>
-                        </div>
+                        </a>
+
                     </li>
-                    <li class="nav-item" sec:authorize="hasRole('ROLE_REVISOR')">
-                        <a href="/revisor/dashboard" class="nav-link">Dashboard revisore</a>
-                        <div class="mt-1" th:if="${articlesToBeRevised >0}">
+                    <li class="nav-item d-flex" sec:authorize="hasRole('ROLE_REVISOR')">
+                        <a href="/revisor/dashboard" class="nav-link">Dashboard revisore
+                        <div class="px-2" th:if="${articlesToBeRevised >0}">
                             <i class="fas fa-bell fa-1 pt-2"></i>
-                            <span class="badge rounded-pill bg-danger text-white px-1" th:text="${articlesToBeRevised}"></span>
+                            <span class="badge rounded-pill bg-danger text-white px-1"
+                                th:text="${articlesToBeRevised}"></span>
                         </div>
+                        </a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_WRITER')">
-                        <a th:href="/writer/dashboard" class="nav-link">Dashboard writer</a>
+                        <a href="/writer/dashboard" class="nav-link">Dashboard writer</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -77,12 +81,13 @@
                 </div>
             </div>
             <form th:action="@{/articles/search}" class="d-flex" method="get">
-                <input type="search" class="form-control me-2" name="keyword" aria-label="Search" placeholder="Cerca...">
+                <input type="search" class="form-control me-2" name="keyword" aria-label="Search"
+                    placeholder="Cerca...">
                 <button type="submit" class="btn btn-outline-success">Cerca</button>
             </form>
-            
+
         </div>
-        
+
     </nav>
     <!-- Fine Navbar -->
     <!-- inizio footer -->

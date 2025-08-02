@@ -17,7 +17,7 @@
                         </div>
                         
                         <div class="card-body">
-                            <form th:action="@{/articles/update/{id}{id=article.id}}" method="post" th:object="${article}"
+                            <form th:action="@{/articles/update/{id}(id=${article.id})}" method="post" th:object="${article}"
                                 enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Titolo</label>
