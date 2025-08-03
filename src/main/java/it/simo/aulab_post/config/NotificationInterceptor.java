@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import it.simo.aulab_post.repositories.CareerRequestRepository;
 import it.simo.aulab_post.repositories.ArticleRepository;
+import it.simo.aulab_post.repositories.CareerRequestRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -27,7 +27,7 @@ public class NotificationInterceptor implements HandlerInterceptor {
             modelAndView.addObject("careerRequests", careerCount);
         }
         if(modelAndView !=null && request.isUserInRole("ROLE_REVISOR")){
-            int revisedCount=articleRepository.findByIsAcceptedIsNull().size();
+            int revisedCount=articleRepository.findByIsAcceptedNull().size();
             modelAndView.addObject("articleToBeRevised", revisedCount);
         }
     }

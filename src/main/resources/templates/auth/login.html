@@ -6,8 +6,9 @@
 </head>
 
 <body>
-    <div th:insert="~{index :: navbar}"></div>
-    <div class="vh-100">
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+
         <div class="container">
             <div class="row col-md-6 offset-md-2">
                 <div class="card">
@@ -25,19 +26,19 @@
                         <h1 class="text-center">Login</h1>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/login}" method="post"  role="form">
-                            
+                        <form th:action="@{/login}" method="post" role="form">
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email"
-                                    placeholder="Inserisci la tua email" name="username">
-                                
+                                <input type="email" class="form-control" id="email" placeholder="Inserisci la tua email"
+                                    name="username">
+
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" 
+                                <input type="password" class="form-control" id="password"
                                     placeholder="Inserisci la tua password" name="password">
-                                
+
                             </div>
                             <div class="mb-3">
                                 <div class="form-check">
@@ -54,9 +55,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div th:insert="~{index :: footer}" class="fixed-bottom"></div>
 
+    </div>
+    <div th:insert="~{index :: footer}" class=""></div>
 
     <div th:replace="~{index :: bootstrapScript}"></div>
 </body>

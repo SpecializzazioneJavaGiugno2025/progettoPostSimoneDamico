@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:insert="~{index :: head}">
-    
+
 </head>
+
 <body>
-    <div th:insert="~{index :: navbar}"></div>
-    <div class="vh-100">
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+
         <div class="container-fluid p-5 bg-secondary-subtle text-center">
             <div class="row justify-content-center">
                 <div class="col-12">
@@ -34,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div th:insert="~{index :: footer}"></div>
+    <div th:insert="~{index :: footer}" class=""></div>
     <div th:replace="~{index :: bootstrapScript}"></div>
 </body>
 

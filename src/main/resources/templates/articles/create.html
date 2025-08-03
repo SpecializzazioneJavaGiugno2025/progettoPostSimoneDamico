@@ -4,10 +4,10 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
 
-    <div th:insert="~{index :: navbar}"></div>
 
-    <div class="vh-100">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-6">
@@ -15,7 +15,7 @@
                         <div class="card-header">
                             <h1 class="text-center" th:text="${title}">Crea un nuovo articolo</h1>
                         </div>
-                        
+
                         <div class="card-body">
                             <form th:action="@{/articles}" method="post" th:object="${article}"
                                 enctype="multipart/form-data">
@@ -30,7 +30,8 @@
                                     <input type="text" class="form-control" id="subtitle" th:field="*{subtitle}"
                                         required>
                                     <p th:errors="*{subtitle}" class="text-danger"
-                                        th:if="${#fields.hasErrors('subtitle')}"></p>
+                                        th:if="${#fields.hasErrors('subtitle')}">
+                                    </p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="body" class="form-label">Articolo</label>
@@ -39,8 +40,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="date" class="form-label">Data</label>
-                                    <input type="date" class="form-control" id="date" th:field="*{publishDate}"
-                                        required placeholder="yyyyMMdd" >
+                                    <input type="date" class="form-control" id="date" th:field="*{publishDate}" required
+                                        placeholder="yyyyMMdd">
                                     <p th:errors="*{publishDate}" class="text-danger"
                                         th:if="${#fields.hasErrors('publishDate')}"></p>
                                 </div>
@@ -51,7 +52,8 @@
                                             th:text="${category.name}"></option>
                                     </select>
                                     <p th:errors="*{category}" class="text-danger"
-                                        th:if="${#fields.hasErrors('category')}"></p>
+                                        th:if="${#fields.hasErrors('category')}">
+                                    </p>
                                 </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Immagine</label>
@@ -64,9 +66,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div th:insert="~{index :: footer}"></div>
+    </div>
+    <div th:insert="~{index :: footer}" class=""></div>
 
     <div th:replace="~{index :: bootstrapScript}"></div>
 

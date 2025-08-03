@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:insert="~{index :: head}">
-    
+
 </head>
+
 <body>
-    <div th:insert="~{index :: navbar}"></div>
     <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+
         <div th:if="${successMessage}" class="alert alert-success">
             <p th:text="${successMessage}"></p>
         </div>
@@ -37,14 +40,14 @@
                 </div>
             </div>
         </div>
-        <div th:unless="${articles.size() > 0}" class="row justify-content-center vh-100">
+        <div th:unless="${articles.size() > 0}" class="row justify-content-center ">
             <div class="col-10 mb-5">
                 <h1 class="text-center">Nessun articolo trovato</h1>
             </div>
         </div>
-    </div>
 
-    <div th:insert="~{index :: footer}"></div>
+    </div>
+    <div th:insert="~{index :: footer}" class=""></div>
     <div th:replace="~{index :: bootstrapScript}"></div>
 </body>
 

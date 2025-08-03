@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:insert="~{index :: head}">
-    
+
 </head>
+
 <body>
-    <div th:insert="~{index :: navbar}"></div>
-    <div class="vh-100">
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+
         <div class="container">
             <div class="row">
                 <div class="col-12 d-flex my-5 justify-content-between align-item-center">
                     <h1 th:text="${title}"></h1>
                 </div>
                 <div class="col-12 my-5">
-                    <form th:action="@{/categories}" method="POST" th:object="${category}" >
+                    <form th:action="@{/categories}" method="POST" th:object="${category}">
                         <div class="row mb-3">
                             <label for="name" class="form-label">Nome categoria</label>
-                            <input th:field="*{name}" type="text" id="name" class="form-control" placeholder="Inserisci il nome della categoria">
+                            <input th:field="*{name}" type="text" id="name" class="form-control"
+                                placeholder="Inserisci il nome della categoria">
                             <p class="text-danger" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></p>
                         </div>
 
-                        
+
                         <button type="submit" class="btn btn-success">Crea categoria</button>
                     </form>
                 </div>
             </div>
         </div>
+
     </div>
 
 
-
-    <div th:insert="~{index :: footer}"></div>
+    <div th:insert="~{index :: footer}" class=""></div>
     <div th:replace="~{index :: bootstrapScript}"></div>
 </body>
+
 </html>

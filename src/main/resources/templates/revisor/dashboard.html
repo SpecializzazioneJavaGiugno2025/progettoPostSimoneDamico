@@ -6,9 +6,10 @@
 </head>
 
 <body>
-    <div th:insert="~{index :: navbar}"></div>
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
 
-    <div class="vh-100">
+
         <div th:if="${resultMessage}" class="alert alert-success">
             <p th:text="${resultMessage}"></p>
         </div>
@@ -25,11 +26,11 @@
                 <table class="table table-stripped table-responsive-lg">
                     <thead>
                         <tr>
-                        <th>Id</th>
-                        <th>Title</th>  
-                        <th>Sottotitolo</th>
-                        <th>Categoria</th>
-                        <th>Actions</th>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Sottotitolo</th>
+                            <th>Categoria</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,7 +39,7 @@
                             <td th:text="${article.title}"></td>
                             <td th:text="${article.subtitle}"></td>
                             <td th:if="${article.category }" th:text="${article.category.name}"></td>
-                            <td th:unless="${article.category }" >Nessuna Categoria</td>
+                            <td th:unless="${article.category }">Nessuna Categoria</td>
                             <td>
                                 <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}"
                                     class="btn btn-primary m-2">
@@ -50,12 +51,12 @@
                 </table>
             </div>
         </div>
+
+
     </div>
 
 
-
-
-    <div th:insert="~{index :: footer}"></div>
+    <div th:insert="~{index :: footer}" class=""></div>
     <div th:replace="~{index :: bootstrapScript}"></div>
 </body>
 
