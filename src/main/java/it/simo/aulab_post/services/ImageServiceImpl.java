@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Image;
+import it.simo.aulab_post.models.User;
 import it.simo.aulab_post.repositories.ImageRepository;
+import it.simo.aulab_post.repositories.UserRepository;
 import it.simo.aulab_post.utils.StringManipulation;
 import jakarta.transaction.Transactional;
 
@@ -49,6 +51,8 @@ public class ImageServiceImpl implements ImageService{
         url=url.replace(supabaseBucket, supabaseImage);
         imageRepository.save(Image.builder().path(url).article(article).build());
     }
+
+   
 
     @Async
     public CompletableFuture<String> saveImageOnCloud(MultipartFile file) throws Exception {

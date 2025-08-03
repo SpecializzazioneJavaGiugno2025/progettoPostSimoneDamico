@@ -3,6 +3,7 @@ CREATE TABLE users (
     username VARCHAR(100),
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE roles (

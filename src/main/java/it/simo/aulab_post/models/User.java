@@ -36,6 +36,9 @@ public class User {
     private String email;
     @Column(nullable=false)
     private String password;
+   
+    
+   
 
 
     @ManyToMany(fetch=FetchType.EAGER,cascade=CascadeType.ALL)

@@ -17,7 +17,7 @@
         <p th:text="${successMessage}"></p>
     </div>
 
-    <div class="vh-100 container-fluid">
+    <div class=" container-fluid">
         <div class="row">
             <h1> Benvenuti in Aulab Crhonicles</h1>
         </div>
@@ -47,8 +47,8 @@
                 </div>
             </div>
         </div>
-        <div th:insert="~{index :: footer}"></div>
     </div>
+    <div th:insert="~{index :: footer}" class="fixed-bottom"></div>
 
 
     <div th:replace="~{index :: bootstrapScript}"></div>
