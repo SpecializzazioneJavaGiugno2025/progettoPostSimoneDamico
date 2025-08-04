@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register/**").permitAll()
                         .requestMatchers("/register", "/", "/articles", "/images/**", "/articles/detail/**",
-                                "/search/**", "/articles/search")
+                                "/search/**","/search", "/articles/search","/articles/articles")
                         .permitAll()
                         .requestMatchers("/admin/dashboard", "/categories/create", "/categories/edit/**",
                                 "/categories/delete/**", "/categories/update/**")

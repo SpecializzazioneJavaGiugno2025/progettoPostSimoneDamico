@@ -9,7 +9,6 @@ import it.simo.aulab_post.repositories.ArticleRepository;
 import it.simo.aulab_post.repositories.CareerRequestRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 @Component
 public class NotificationInterceptor implements HandlerInterceptor {
 
