@@ -20,7 +20,7 @@ public interface ArticleRepository extends ListCrudRepository<Article, Long> {
     List<Article> findByIsAcceptedFalse();
 
     
-    List<Article> findByIsAcceptedNull();
+    List<Article> findByIsAcceptedIsNull();
 
     @Query("SELECT a FROM Article a WHERE " + "LOWER(a.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
             + "LOWER(a.subtitle) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +

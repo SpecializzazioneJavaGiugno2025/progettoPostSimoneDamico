@@ -2,12 +2,17 @@ package it.simo.aulab_post.services;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -166,6 +171,32 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
             dtos.add(modelMapper.map(article, ArticleDto.class));
         }
         return dtos;
+    }
+
+    public Page<ArticleDto> findPaginated(Pageable pageable){
+        List<ArticleDto> articles=new ArrayList<>();
+        int pageSize=pageable.getPageSize();
+        int currentPage=pageable.getPageNumber();
+        int startItem=currentPage*pageSize;
+        List<ArticleDto> list=new ArrayList<>();
+        for(Article article: articleRepository.findByIsAcceptedTrue()){
+            articles.add(modelMapper.map(article, ArticleDto.class));
+        }
+        
+
+        for(Article article :articleRepository.findByIsAcceptedTrue()){
+            list.add(modelMapper.map(article, ArticleDto.class));
+        }
+        if(list.size()<startItem){
+            list=Collections.emptyList();
+        }else{
+            int toIndex=Math.min(startItem + pageSize,list.size());
+            list=articles.subList(startItem,toIndex);
+        }
+
+        Page<ArticleDto> articlePage=new PageImpl<ArticleDto>(list, PageRequest.of(currentPage, pageSize),articles.size());
+
+        return articlePage;
     }
 
 }

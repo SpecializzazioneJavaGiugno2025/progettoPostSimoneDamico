@@ -1,15 +1,17 @@
 package it.simo.aulab_post.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,14 +52,23 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping
-    public String articlesIndex(Model viewmModel) {
-        viewmModel.addAttribute("title", "Tutti gli articoli");
-        List<ArticleDto> articles = new ArrayList<>();
-        for (Article article : articleRepository.findByIsAcceptedTrue()) {
-            articles.add(modelMapper.map(article, ArticleDto.class));
+    public String articlesIndex(Model viewModel, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
+        int currentPage=page.orElse(1);
+        int pageSize=size.orElse(6);
+        viewModel.addAttribute("title", "Tutti gli articoli");
+        // List<ArticleDto> articles = new ArrayList<>();
+        // for (Article article : articleRepository.findByIsAcceptedTrue()) {
+        //     articles.add(modelMapper.map(article, ArticleDto.class));
+        // }
+        Page<ArticleDto> articles=articleService.findPaginated(PageRequest.of(currentPage-1, pageSize,Sort.by("pubishDate").descending()));
+        // Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishDate).reversed());
+        viewModel.addAttribute("articles", articles);
+        int totalPages=articles.getTotalPages();
+        if(totalPages>0){
+            List<Integer> pageNumbers =IntStream.rangeClosed(1, totalPages).boxed()
+            .collect(Collectors.toList());
+            viewModel.addAttribute("pageNumbers",pageNumbers);
         }
-        Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishDate).reversed());
-        viewmModel.addAttribute("articles", articles);
         return "articles/articles";
     }
 

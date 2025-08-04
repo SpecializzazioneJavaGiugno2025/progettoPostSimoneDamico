@@ -45,8 +45,8 @@
                         </a>
 
                     </li>
-                    <li class="nav-item d-flex" sec:authorize="hasRole('ROLE_REVISOR')">
-                        <a href="/revisor/dashboard" class="nav-link">Dashboard revisore
+                    <li class="nav-item " sec:authorize="hasRole('ROLE_REVISOR')">
+                        <a href="/revisor/dashboard" class="nav-link d-flex">Dashboard revisore
                             <div class="px-2" th:if="${articleToBeRevised > 0}">
                                 <i class="fas fa-bell fa-1 pt-2"></i>
                                 <span class="badge rounded-pill bg-danger text-white px-1"
