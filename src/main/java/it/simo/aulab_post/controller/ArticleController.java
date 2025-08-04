@@ -1,6 +1,7 @@
 package it.simo.aulab_post.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -105,9 +106,11 @@ public class ArticleController {
 
     @GetMapping("detail/{id}")
     public String articleDetails(@PathVariable("id") Long id, Model viewModel) {
-        List<Comment> comments = commentRepository.findByArticle(articleRepository.findById(id).get());
+        List<Comment> comments = new ArrayList<>();
+        comments = commentRepository.findByArticle(articleRepository.findById(id).get());
         viewModel.addAttribute("title", "Dettagli articolo");
         viewModel.addAttribute("article", articleService.read(id));
+        viewModel.addAttribute("comments", comments);
         return "articles/detail";
     }
 

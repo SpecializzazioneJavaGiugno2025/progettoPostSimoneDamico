@@ -5,5 +5,5 @@ import java.security.Principal;
 import it.simo.aulab_post.models.Comment;
 
 public interface  CommentService {
-    void addComment(Long id,Comment comment,Principal principal);
+    void addComment(Long id,String body,Principal principal);
 }

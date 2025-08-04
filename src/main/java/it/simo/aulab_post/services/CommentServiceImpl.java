@@ -23,8 +23,9 @@ public class CommentServiceImpl implements CommentService {
     UserRepository userRepository;
 
     @Override
-    public void addComment(Long id, Comment comment, Principal principal) {
+    public void addComment(Long id, String body, Principal principal) {
         Article article=articleRepository.findById(id).get();
+        Comment comment=new Comment();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
@@ -32,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
             User user = (userRepository.findById(userDetails.getId())).get();
             comment.setUser(user);
         }
+        comment.setBody(body);
 
         comment.setArticle(article);
         commentRepository.save(comment);

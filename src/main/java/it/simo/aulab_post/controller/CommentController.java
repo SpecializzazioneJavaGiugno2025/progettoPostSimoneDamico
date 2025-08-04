@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.models.Comment;
+import it.simo.aulab_post.repositories.ArticleRepository;
+import it.simo.aulab_post.repositories.CommentRepository;
 import it.simo.aulab_post.services.ArticleService;
 import it.simo.aulab_post.services.CommentService;
 
@@ -23,18 +25,24 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
+    @Autowired
+    ArticleRepository articleRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     @PostMapping("comment/create/{id}")
-    public String commentCreate(Model viewModel,@ModelAttribute("comment") Comment comment, BindingResult result,     RedirectAttributes redirectAttributes,Principal principal, @PathVariable("id") Long id){
-        if(result.hasErrors()){
+    public String commentCreate(Model viewModel, @ModelAttribute("comment") Comment comment, BindingResult result,
+            RedirectAttributes redirectAttributes, Principal principal, @PathVariable("id") Long id) {
+        if (result.hasErrors()) {
             viewModel.addAttribute("title", "Dettagli articolo");
-        viewModel.addAttribute("article", articleService.read(id));
-            return "articles/detail";
+            viewModel.addAttribute("article", articleService.read(id));
+            viewModel.addAttribute("comments", commentRepository.findByArticle(articleRepository.findById(id).get()));
+            return "redirect:/articles/detail/" + id;
         }
+        String body = comment.getBody();
 
-        commentService.addComment(id,comment,principal);
+        commentService.addComment(id, body, principal);
 
-
-        return "articles/detail";
+        return "redirect:/articles/detail/" + id;
     }
 }
