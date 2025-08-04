@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import it.simo.aulab_post.dtos.ArticleDto;
 import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Category;
+import it.simo.aulab_post.models.Comment;
 import it.simo.aulab_post.models.User;
 import it.simo.aulab_post.repositories.ArticleRepository;
 import it.simo.aulab_post.repositories.UserRepository;
@@ -197,6 +198,11 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         Page<ArticleDto> articlePage=new PageImpl<ArticleDto>(list, PageRequest.of(currentPage, pageSize),articles.size());
 
         return articlePage;
+    }
+
+    public void addComment(Long id, Comment comment, Principal principal) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addComment'");
     }
 
 }

@@ -29,7 +29,9 @@ import it.simo.aulab_post.dtos.ArticleDto;
 import it.simo.aulab_post.dtos.CategoryDto;
 import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Category;
+import it.simo.aulab_post.models.Comment;
 import it.simo.aulab_post.repositories.ArticleRepository;
+import it.simo.aulab_post.repositories.CommentRepository;
 import it.simo.aulab_post.services.ArticleService;
 import it.simo.aulab_post.services.CrudService;
 import jakarta.validation.Valid;
@@ -50,6 +52,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @GetMapping
     public String articlesIndex(Model viewModel, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
@@ -100,6 +105,7 @@ public class ArticleController {
 
     @GetMapping("detail/{id}")
     public String articleDetails(@PathVariable("id") Long id, Model viewModel) {
+        List<Comment> comments = commentRepository.findByArticle(articleRepository.findById(id).get());
         viewModel.addAttribute("title", "Dettagli articolo");
         viewModel.addAttribute("article", articleService.read(id));
         return "articles/detail";

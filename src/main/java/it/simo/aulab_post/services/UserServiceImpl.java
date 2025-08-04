@@ -10,7 +10,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.dtos.UserDto;
@@ -38,8 +37,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private ImageService imageService;
+    
 
     @Autowired 
     private AuthenticationManager authenticationManager;

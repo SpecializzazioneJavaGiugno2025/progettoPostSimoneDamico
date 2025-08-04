@@ -39,9 +39,12 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${articles.totalPages > 0}"  class="pagination justify-content-center w-100" th:each="pageNumber : ${pageNumbers}">
-                <a th:href="@{/articles(size=${articles.size}, page=${pageNumber})}" th:text=${pageNumber}
-                    th:class="${pageNumber==articles.number + 1} ? active" ></a>
+            <div class="pagination justify-content-center">
+                <div th:if="${articles.totalPages > 0}" class="page-item border border-1 border-secondary px-2 mx-1 mb-2"
+                    th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/articles(size=${articles.size}, page=${pageNumber})}" th:text=${pageNumber}
+                        th:class="${pageNumber==articles.number + 1} ? active" class="page-link"></a>
+                </div>
             </div>
         </div>
 
