@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="container" th:if="${articles.getSize() > 0}">
+        <div class="container" th:if="${articles.size() > 0}">
             <div class="row justify-content-center mb-5">
                 <div class="col-12 col-md-4 d-flex justify-content-center" th:each="article : ${articles}">
                     <div class="card mb-3" style="width: 18rem;">
@@ -39,16 +39,16 @@
                     </div>
                 </div>
             </div>
-            <div class="pagination justify-content-center">
+            <!-- <div class="pagination justify-content-center">
                 <div th:if="${articles.totalPages > 0}" class="page-item border border-1 border-secondary px-2 mx-1 mb-2"
                     th:each="pageNumber : ${pageNumbers}">
                     <a th:href="@{/articles(size=${articles.size}, page=${pageNumber})}" th:text=${pageNumber}
                         th:class="${pageNumber==articles.number + 1} ? active" class="page-link"></a>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <div th:unless="${articles.getSize() > 0}" class="row justify-content-center ">
+        <div th:unless="${articles.size() > 0}" class="row justify-content-center ">
             <div class="col-10 mb-5">
                 <h1 class="text-center">Nessun articolo trovato</h1>
             </div>
