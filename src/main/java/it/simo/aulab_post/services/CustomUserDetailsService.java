@@ -2,8 +2,6 @@ package it.simo.aulab_post.services;
 
 import java.util.Arrays;
 import java.util.Collection;
-
-
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             user.getUsername(),
             user.getEmail(),
             user.getPassword(),
+            user.getProfileImage(),
             mapRolesToAuthorities(user.getRoles()));
            
     }

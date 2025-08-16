@@ -1,0 +1,13 @@
+body{
+    background-color: rgb(142, 142, 169);
+}
+
+.nav-item :hover{
+    color: rgb(224, 28, 28);
+}
+
+.img-profile{
+    width: 200px;
+    height: 300px;
+    
+}

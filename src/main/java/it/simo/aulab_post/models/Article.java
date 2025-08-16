@@ -1,6 +1,8 @@
 package it.simo.aulab_post.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -10,11 +12,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,10 +47,9 @@ public class Article {
     @NotEmpty
     @Size(max = 1000)
     private String body;
-
-    @Column(nullable = true, length = 8)
-    @NotNull
-    private LocalDate publishDate;
+    
+    @Column(name = "created_at", insertable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = true)
     private Boolean isAccepted;
@@ -62,9 +63,15 @@ public class Article {
     @JsonIgnoreProperties({ "articles" })
     private Category category;
 
+    
+
     @OneToOne(mappedBy = "article")
     @JsonIgnoreProperties({ "article" })
     private Image image;
+
+    @ManyToMany(mappedBy = "favoritedArticles")
+    @JsonIgnoreProperties({ "favoritedArticles" })
+    private List<User> favoritedUsers = new ArrayList<>();
 
     @Override
     public boolean equals(Object obj) {
@@ -72,7 +79,7 @@ public class Article {
         if (title.equals(article.getTitle())
                 && subtitle.equals(article.getSubtitle())
                 && body.equals(article.getBody())
-                && publishDate.equals(article.getPublishDate())
+
                 && category.getName().equals(article.getCategory().getName())
                 && image.getPath().equals(article.getImage().getPath())) {
             return true;

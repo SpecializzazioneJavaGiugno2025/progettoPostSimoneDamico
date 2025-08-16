@@ -3,6 +3,8 @@ package it.simo.aulab_post.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,5 +50,17 @@ public class User {
     inverseJoinColumns={@JoinColumn(name="ROLE_ID",referencedColumnName="id")})
     private List<Role> roles = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnoreProperties({ "user" })
+    private ProfileImage profileImage;
+
+
+
+    @ManyToMany(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
+    @JoinTable(name="articles_users",
+    joinColumns={@JoinColumn(name="USER_ID",referencedColumnName="id")},
+    inverseJoinColumns={@JoinColumn(name="ARTICLE_ID",referencedColumnName="id")})
+    @JsonIgnoreProperties({"favoritedUsers"})
+    private List<Article> favoritedArticles = new ArrayList<>();
     
 }

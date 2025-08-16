@@ -29,5 +29,6 @@ public class NotificationInterceptor implements HandlerInterceptor {
             int revisedCount=articleRepository.findByIsAcceptedNull().size();
             modelAndView.addObject("articleToBeRevised", revisedCount);
         }
+        
     }
 }

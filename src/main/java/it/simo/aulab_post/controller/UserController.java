@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.dtos.ArticleDto;
@@ -24,8 +27,12 @@ import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.User;
 import it.simo.aulab_post.repositories.ArticleRepository;
 import it.simo.aulab_post.repositories.CareerRequestRepository;
+import it.simo.aulab_post.repositories.FavoritesRepository;
+import it.simo.aulab_post.repositories.UserRepository;
 import it.simo.aulab_post.services.ArticleService;
 import it.simo.aulab_post.services.CategoryService;
+import it.simo.aulab_post.services.CustomUserDetails;
+import it.simo.aulab_post.services.FavoritesService;
 import it.simo.aulab_post.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,15 +59,24 @@ public class UserController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private FavoritesService favoritesService;
+    @Autowired
+    private FavoritesRepository favoritesRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
     public String home(Model viewModel) {
 
         List<ArticleDto> articles = new ArrayList<>();
-        for(Article article: articleRepository.findByIsAcceptedTrue()) {
+        for (Article article : articleRepository.findByIsAcceptedTrue()) {
             articles.add(modelMapper.map(article, ArticleDto.class));
         }
-        Collections.sort(articles,Comparator.comparing(ArticleDto::getPublishDate).reversed());
-        List<ArticleDto> lastArticles =articles.stream().filter(article-> Boolean.TRUE.equals(article.getIsAccepted())).limit(3).collect(Collectors.toList());
+        Collections.sort(articles, Comparator.comparing(ArticleDto::getCreatedAt).reversed());
+        List<ArticleDto> lastArticles = articles.stream()
+                .filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).limit(3).collect(Collectors.toList());
         viewModel.addAttribute("articles", lastArticles);
 
         return "home";
@@ -79,54 +95,83 @@ public class UserController {
 
     @PostMapping("/register/save")
     public String registration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, Model model,
-            RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response) {
-                User existingUser = userService.findUserByEmail(userDto.getEmail());
-                if(existingUser != null && existingUser.getEmail()!= null && !existingUser.getEmail().isEmpty()) {
-                    result.rejectValue("email", null, "Email già utilizzata");
-                }
-                if(result.hasErrors()) {
-                    model.addAttribute("user", userDto);
-                    return "auth/register";
-                }
-                userService.saveUser(userDto, redirectAttributes, request, response);
+            RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response,
+            MultipartFile image) {
+        User existingUser = userService.findUserByEmail(userDto.getEmail());
+        if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
+            result.rejectValue("email", null, "Email già utilizzata");
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("user", userDto);
+            return "auth/register";
+        }
+        userService.saveUser(userDto, redirectAttributes, request, response, image);
 
-                redirectAttributes.addFlashAttribute("success", "Registrazione avvenuta con successo");
-                return "redirect:/";
+        redirectAttributes.addFlashAttribute("success", "Registrazione avvenuta con successo");
+        return "redirect:/";
     }
 
     @GetMapping("/search/{id}")
     public String userArticlesSearch(@PathVariable("id") Long id, Model viewModel) {
-        User user= userService.find(id);
-        viewModel.addAttribute("title", "Tutti gli articoli trovati per utente: "+user.getUsername());
+        User user = userService.find(id);
+        viewModel.addAttribute("title", "Profilo utente: " + user.getUsername());
+        viewModel.addAttribute("user", user);
 
         List<ArticleDto> articles = articleService.searchByAuthor(user);
-                List<ArticleDto> acceptedArticles=articles.stream().filter(article-> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+        List<ArticleDto> acceptedArticles = articles.stream()
+                .filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+        List<ArticleDto> rejectedArticles = articles.stream()
+                .filter(article -> Boolean.FALSE.equals(article.getIsAccepted())).collect(Collectors.toList());
+        List<ArticleDto> pendingArticles = articles.stream().filter(article -> article.getIsAccepted() == null)
+                .collect(Collectors.toList());
+        List<Long> likedid= favoritesRepository.findByUserId(user.getId());
+        List<ArticleDto> likedArticles=new ArrayList<>();
+        for(Long id2:likedid){
+            ArticleDto articleDto=articleService.read(id2);
+            likedArticles.add(articleDto);
+        }
 
-        viewModel.addAttribute("articles",acceptedArticles);
-        return "articles/articles";
+        viewModel.addAttribute("articles", acceptedArticles);
+        viewModel.addAttribute("rejectedArticles", rejectedArticles);
+        viewModel.addAttribute("pendingArticles", pendingArticles);
+        viewModel.addAttribute("likedArticles", likedArticles);
+        return "auth/profile";
     }
 
     @GetMapping("/admin/dashboard")
-    public String adminDashboard(Model viewModel){
+    public String adminDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Richieste ricevute");
-        viewModel.addAttribute("requests",careerRequestRepository.findByIsCheckedFalse());
-        viewModel.addAttribute("categories",categoryService.readAll());
+        viewModel.addAttribute("requests", careerRequestRepository.findByIsCheckedFalse());
+        viewModel.addAttribute("categories", categoryService.readAll());
         return "admin/dashboard";
     }
 
     @GetMapping("/revisor/dashboard")
-    public String revisorDashboard(Model viewModel){
+    public String revisorDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Articoli da revisionare");
-        viewModel.addAttribute("articles",articleRepository.findByIsAcceptedNull());
+        viewModel.addAttribute("articles", articleRepository.findByIsAcceptedNull());
         return "revisor/dashboard";
     }
 
     @GetMapping("/writer/dashboard")
-    public String writerDashboard(Model viewModel, Principal principal){
+    public String writerDashboard(Model viewModel, Principal principal) {
         viewModel.addAttribute("title", "I tuoi articoli");
-        List<ArticleDto> userArticles= articleService.readAll().stream().filter(article-> article.getUser().getEmail().equals(principal.getName())).toList();
+        List<ArticleDto> userArticles = articleService.readAll().stream()
+                .filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
 
         viewModel.addAttribute("articles", userArticles);
         return "writer/dashboard";
+    }
+
+    @PostMapping("/addLike/{id}")
+    public String addLike(@PathVariable("id") Long id, Principal principal) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = (userRepository.findById(userDetails.getId())).get();
+
+        favoritesService.addFavorite(id, user);
+        return "redirect:/articles/detail/" + id + "#like";
     }
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+
+</head>
+
+<body>
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+        <div th:if="${param.notAuthorized}">
+            <div class="alert alert-dander">
+                Non sei autorizzato ad accedere a questa pagina!
+            </div>
+        </div>
+    </div>
+    <div th:insert="~{index :: footer}"></div>
+
+
+    <div th:replace="~{index :: bootstrapScript}"></div>
+</body>
+
+</html>

@@ -28,8 +28,10 @@ import it.simo.aulab_post.dtos.CategoryDto;
 import it.simo.aulab_post.models.Article;
 import it.simo.aulab_post.models.Category;
 import it.simo.aulab_post.models.Comment;
+import it.simo.aulab_post.models.User;
 import it.simo.aulab_post.repositories.ArticleRepository;
 import it.simo.aulab_post.repositories.CommentRepository;
+import it.simo.aulab_post.repositories.UserRepository;
 import it.simo.aulab_post.services.ArticleService;
 import it.simo.aulab_post.services.CrudService;
 import jakarta.validation.Valid;
@@ -54,6 +56,9 @@ public class ArticleController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping
     public String articlesIndex(Model viewModel) {
         
@@ -62,7 +67,7 @@ public class ArticleController {
             articles.add(modelMapper.map(article, ArticleDto.class));
         }
         // Page<ArticleDto> articles=articleService.findPaginated(PageRequest.of(currentPage-1, pageSize,Sort.by("pubishDate").descending()));
-        Collections.sort(articles, Comparator.comparing(ArticleDto::getPublishDate).reversed());
+        Collections.sort(articles, Comparator.comparing(ArticleDto::getCreatedAt).reversed());
         viewModel.addAttribute("articles", articles);
         // int totalPages=articles.getTotalPages();
         // if(totalPages>0){
@@ -100,12 +105,18 @@ public class ArticleController {
     }
 
     @GetMapping("detail/{id}")
-    public String articleDetails(@PathVariable("id") Long id, Model viewModel) {
+    public String articleDetails(@PathVariable("id") Long id, Model viewModel, Principal principal) {
         List<Comment> comments = new ArrayList<>();
+        if (principal != null) {
+            User currentUser=userRepository.findByEmail(principal.getName());
+            viewModel.addAttribute("currentUser", currentUser);
+        }
         comments = commentRepository.findByArticle(articleRepository.findById(id).get());
         viewModel.addAttribute("title", "Dettagli articolo");
         viewModel.addAttribute("article", articleService.read(id));
         viewModel.addAttribute("comments", comments);
+        System.out.println(articleService.read(id).getCreatedAt());
+
         return "articles/detail";
     }
 

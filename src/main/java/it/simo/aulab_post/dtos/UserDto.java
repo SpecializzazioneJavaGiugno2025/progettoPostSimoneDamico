@@ -1,7 +1,11 @@
 package it.simo.aulab_post.dtos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import it.simo.aulab_post.models.Article;
+import it.simo.aulab_post.models.ProfileImage;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+
 
 @Getter
 @Setter
@@ -27,6 +33,8 @@ public class UserDto {
     private String password;
     @NotEmpty(message = "Password conferma è obbligatoria")
     private String passwordConfirm;
+    private ProfileImage profileImage;
+    private List<Article>  favoritedArticles = new ArrayList<>();
 
     
 

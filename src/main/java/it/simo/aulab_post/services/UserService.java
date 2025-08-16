@@ -2,6 +2,7 @@ package it.simo.aulab_post.services;
 
 
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.dtos.UserDto;
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface UserService {
 
     void saveUser(UserDto userDto,RedirectAttributes redirectAttributes,HttpServletRequest request,
-    HttpServletResponse response);
+    HttpServletResponse response, MultipartFile file);
     User findUserByEmail(String email);
     User find(Long id);
 }

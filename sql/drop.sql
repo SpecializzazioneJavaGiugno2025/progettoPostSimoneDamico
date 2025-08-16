@@ -1,4 +1,6 @@
 DROP TABLE users_roles;
+DROP TABLE articles_users;
+DROP TABLE profile_images;
 DROP TABLE comments;
 DROP TABLE career_request;
 DROP TABLE images;

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+
+</head>
+
+<body>
+    <div class="min-vh-100">
+        <div th:insert="~{index :: navbar}"></div>
+
+        <div class="container">
+            <div class="row ">
+                <div class="col-12 col-md-4  my-5 justify-content-between align-item-center">
+                    <img class="img-profile" th:if="${#authentication.principal.profileImage != null}" th:src="${#authentication.principal.profileImage.path}" alt="">
+                    <img class="img-profile" th:unless="${#authentication.principal.profileImage != null}" th:src="@{/images/default.jpg}" alt="">
+                </div>
+                <div class="col-12 col-md-8 my-5">
+                    <h1 class="text-center" >Nome: <span th:text="${user.username}"></span></h1>
+                    <p class="text-center " >Email: <span th:text="${user.email}"></span></p>
+                                        <p th:if="${user.roles.size() != 0}" class="text-center">Ruolo: <span th:text="${user.roles.last.name}"></span></p>
+                    
+                </div>
+            </div>
+
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="row justify-content-center mb-5">
+                    <h2 class="text-center" >Lista degli articoli</h2>
+                    <p th:if="${#lists.isEmpty(articles) }" class="text-center">Non ha ancora pubblicato nessun articolo</p>
+                    <div th:each="article : ${articles}" class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card mb-3" style="width: 18rem;">
+                            <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top" alt="...">
+                            <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${article.title}"></h5>
+                                <p class="card-text" th:text="${article.subtitle}"></p>
+                                <p class="card-text" th:text="${article.user.username}"></p>
+                                <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="btn btn-primary">Leggi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5" sec:authorize="hasRole('ROLE_REVISOR') or #authentication.principal.id == user.id">
+                    <h2 class="text-center" >Lista degli articoli rifiutati</h2>
+                    <p th:if="${#lists.isEmpty(rejectedArticles) }" class="text-center">Non hai articoli rifiutati</p>
+                    <div th:each="article : ${rejectedArticles}" class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card mb-3" style="width: 18rem;">
+                            <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top" alt="...">
+                            <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${article.title}"></h5>
+                                <p class="card-text" th:text="${article.subtitle}"></p>
+                                <p class="card-text" th:text="${article.user.username}"></p>
+                                <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}"
+                                    class="btn btn-primary m-2">
+                                    Leggi</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-5"sec:authorize="hasRole('ROLE_REVISOR') or #authentication.principal.id == user.id">
+                    <h2 class="text-center" >Lista degli articoli in attesa</h2>
+                    <p th:if="${#lists.isEmpty(pendingArticles) }" class="text-center">Non hai articoli in attesa</p>
+                    <div th:each="article : ${pendingArticles}" class="col-12 col-md-4 d-flex justify-content-center">
+                        
+                        <div class="card mb-3" style="width: 18rem;">
+                            <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top" alt="...">
+                            <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${article.title}"></h5>
+                                <p class="card-text" th:text="${article.subtitle}"></p>
+                                <p class="card-text" th:text="${article.user.username}"></p>
+                                <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}"
+                                    class="btn btn-primary m-2">
+                                    Leggi</i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="row justify-content-center mb-5"sec:authorize="hasRole('ROLE_REVISOR') or #authentication.principal.id == user.id">
+                    <h2 class="text-center" >Lista degli articoli preferiti</h2>
+                    <p th:if="${#lists.isEmpty(pendingArticles) }" class="text-center">Non hai articoli preferiti</p>
+                    <div th:each="article : ${likedArticles}" class="col-12 col-md-4 d-flex justify-content-center">
+                        
+                        <div class="card mb-3" style="width: 18rem;">
+                            <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top" alt="...">
+                            <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${article.title}"></h5>
+                                <p class="card-text" th:text="${article.subtitle}"></p>
+                                <p class="card-text" th:text="${article.user.username}"></p>
+                                <a th:href="@{/articles/revisor/detail/{id}(id=${article.id})}"
+                                    class="btn btn-primary m-2">
+                                    Leggi</i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+        
+    <div th:insert="~{index :: footer}"></div>
+    <div th:replace="~{index :: bootstrapScript}"></div>
+</body>
+
+</html>

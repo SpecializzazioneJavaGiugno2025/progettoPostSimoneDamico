@@ -20,17 +20,17 @@
         <div class="container my-5">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 d-flex flex-column  ">
-                   
-                        <div class="w-25 m-auto ">
-                            <div class="carousel-item active">
-                                <img th:if="${article.image != null}" th:src="${article.image.path}"
-                                    class="card-img-top" alt="...">
-                                <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}"
-                                    class="card-img-top" alt="...">
-                            </div>
+
+                    <div class="w-25 m-auto ">
+                        <div class="carousel-item active">
+                            <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top"
+                                alt="...">
+                            <img th:unless="${article.image != null}" th:src="@{/images/default.jpg}"
+                                class="card-img-top" alt="...">
                         </div>
-                       
-                   
+                    </div>
+
+
 
                     <div class="text-center">
                         <h2 th:text="${article.subtitle}">sottotitolo</h2>
@@ -44,7 +44,7 @@
                         </p>
                         <div class="text-muted my-3">
                             <p>Redatto il
-                            <p th:text="${article.publishDate}"></p>
+                            <p th:text="${#temporals.format(article.createdAt, 'dd/MM/yyyy')}"></p>
                             da <a class="text-muted" th:href="@{/search/{id}(id=${article.user.id})}"
                                 th:text="${article.user.username}"></a>
                             </p>
@@ -52,6 +52,13 @@
 
                     </div>
                     <p th:text="${article.body}"></p>
+                    <form th:action="@{/addLike/{id}(id=${article.id})}" method="post" sec:authorize="isAuthenticated()" id="like">
+                        <button type="submit" class="btn btn-primary">Like
+                             <span th:if="${article.favoritedUsers != null}" th:text="${article.favoritedUsers.size()}"></span>
+                            <span th:if="${#lists.contains(article.favoritedUsers, currentUser)}"><i class="fa-solid fa-heart"></i></span>
+                            <span th:unless="${#lists.contains(article.favoritedUsers, currentUser)}"><i class="fa-regular fa-heart"></i></span>
+                        </button>
+                    </form>
                     <div>
                         <h2>Commenti (<span th:text="${comments.size()}"></span>)</h2>
                         <div th:each="comment : ${comments}">
@@ -62,11 +69,12 @@
                                 </div>
                             </div>
                         </div>
-                        <form th:action="@{/comment/create/{id}(id=${article.id})}" method="post" th:object="${comment}">
+                        <form th:action="@{/comment/create/{id}(id=${article.id})}" method="post"
+                            th:object="${comment}">
                             <h3>Aggiungi commento</h3>
                             <div class="mb-3">
-                                
-                                <textarea class="form-control" id="body" name="body"  rows="3"></textarea>
+
+                                <textarea class="form-control" id="body" name="body" rows="3"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Crea commento</button>
                         </form>

@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import it.simo.aulab_post.models.ProfileImage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private ProfileImage profileImage;
     private Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -62,6 +64,10 @@ public class CustomUserDetails implements UserDetails {
 
     public String getFullname() {
         return username;
+    }
+
+    public ProfileImage getProfileImage() {
+        return profileImage;
     }
 
 }

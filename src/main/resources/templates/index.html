@@ -7,11 +7,12 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    
-    
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+
+
     <script src="https://kit.fontawesome.com/a18020067a.js" crossorigin="anonymous"></script>
-   
+
 
     <title th:text="${title}">Title</title>
 </head>
@@ -36,7 +37,7 @@
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
 
-                        <a class="nav-link d-flex" href="/admin/dashboard"> Dashboard admin
+                        <a class="nav-link d-flex" href="/admin/dashboard"> Admin
                             <div class="px-2" th:if="${careerRequests > 0}">
                                 <i class="fas fa-bell fa-1 pt-2"></i>
                                 <span class="badge rounded-pill bg-danger text-white px-1"
@@ -46,7 +47,7 @@
 
                     </li>
                     <li class="nav-item " sec:authorize="hasRole('ROLE_REVISOR')">
-                        <a href="/revisor/dashboard" class="nav-link d-flex">Dashboard revisore
+                        <a href="/revisor/dashboard" class="nav-link d-flex">Revisore
                             <div class="px-2" th:if="${articleToBeRevised > 0}">
                                 <i class="fas fa-bell fa-1 pt-2"></i>
                                 <span class="badge rounded-pill bg-danger text-white px-1"
@@ -55,7 +56,7 @@
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('ROLE_WRITER')">
-                        <a href="/writer/dashboard" class="nav-link">Dashboard writer</a>
+                        <a href="/writer/dashboard" class="nav-link">Writer</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -72,10 +73,16 @@
                         </ul>
                     </li>
                 </ul>
-                <div sec:authorize="isAuthenticated" class="text-dark "
-                    th:text="'Benvenuto: ' + ${#authentication.principal.fullname} + ' - ' + ${#authentication.principal.authorities[0].authority.replace('ROLE_', '')}">
-                    <!-- <img th:src="${#authentication.principal.profileImage}" alt="" style="width: 10px;"> -->
-                    Benvenuto
+                <div sec:authorize="isAuthenticated" class="d-flex ">
+                    <p class="text-dark mt-4"
+                        ><a th:href="@{/search/{id}(id=${#authentication.principal.id})}" th:text="'Benvenuto: ' + ${#authentication.principal.fullname} + ' - ' + ${#authentication.principal.authorities[0].authority.replace('ROLE_', '')}">Nome utente</a>
+                    </p>
+                    <img th:if="${#authentication.principal.profileImage != null}"
+                        th:src="${#authentication.principal.profileImage.path}" alt="Profilo"
+                        style="width: 50px; border-radius: 50%; margin: 0px;">
+
+
+                    
                 </div>
             </div>
             <form th:action="@{/articles/search}" class="d-flex" method="get">

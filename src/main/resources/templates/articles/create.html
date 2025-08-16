@@ -38,13 +38,7 @@
                                     <input type="text" class="form-control" id="body" th:field="*{body}" required>
                                     <p th:errors="*{body}" class="text-danger" th:if="${#fields.hasErrors('body')}"></p>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="date" class="form-label">Data</label>
-                                    <input type="date" class="form-control" id="date" th:field="*{publishDate}" required
-                                        placeholder="yyyyMMdd">
-                                    <p th:errors="*{publishDate}" class="text-danger"
-                                        th:if="${#fields.hasErrors('publishDate')}"></p>
-                                </div>
+                                
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Categoria</label>
                                     <select th:field="*{category}" class="form-select" id="category">

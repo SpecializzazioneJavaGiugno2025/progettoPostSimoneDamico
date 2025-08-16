@@ -1,8 +1,10 @@
 package it.simo.aulab_post.dtos;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import it.simo.aulab_post.models.Category;
+import it.simo.aulab_post.models.Comment;
 import it.simo.aulab_post.models.Image;
 import it.simo.aulab_post.models.User;
 import lombok.Getter;
@@ -17,9 +19,11 @@ public class ArticleDto {
     private String title;
     private String subtitle;
     private String body;
-    private LocalDate publishDate;
+    private LocalDateTime createdAt;
     private Boolean isAccepted;
     private User user;
     private Category category;
     private Image image;
+    private List<Comment> comments;
+    private List<User> favoritedUsers;
 }

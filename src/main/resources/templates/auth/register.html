@@ -21,7 +21,7 @@
                         <h1 class="text-center">Registrazione</h1>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/register/save}" method="post" th:object="${user}" role="form">
+                        <form th:action="@{/register/save}" method="post" th:object="${user}" role="form" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label for="firstName" class="form-label">Nome</label>
                                 <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
@@ -43,6 +43,10 @@
                                     placeholder="Inserisci la tua email" name="email">
                                 <p th:errors="*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
                             </div>
+                            <div>
+                                <label for="file" class="form-label">Foto profilo</label>
+                                <input type="file" class="form-control" id="file" name="image">
+                            </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" th:field="*{password}"
@@ -57,9 +61,6 @@
                                     name="passwordConfirm">
                                 <p th:if="${#fields.hasErrors('passwordConfirm')}" th:errorclass="error"
                                     th:errors="*{passwordConfirm}"></p>
-
-
-
                             </div>
 
                             <div class="form-group">
@@ -72,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div th:insert="~{index :: footer}" class=""></div>
+    <footer th:replace="~{index :: footer}" class=""></footer>
 
 
     <div th:replace="~{index :: bootstrapScript}"></div>

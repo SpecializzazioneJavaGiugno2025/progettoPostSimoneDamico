@@ -1,6 +1,7 @@
 package it.simo.aulab_post.services;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.simo.aulab_post.dtos.UserDto;
@@ -37,7 +39,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    
+    @Autowired
+    ProfileImageService profileImageService;
 
     @Autowired 
     private AuthenticationManager authenticationManager;
@@ -47,21 +50,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDto userDto, RedirectAttributes redirectAttributes, HttpServletRequest request,
-            HttpServletResponse response) {
-
+            HttpServletResponse response, MultipartFile profileImage) {
+                String url="";
                 
        User user = new User();
+
+        if (!profileImage.isEmpty()) {
+            try {
+                CompletableFuture<String> futureUrl = profileImageService.saveImageOnCloud(profileImage);
+                url = futureUrl.get();
+            } catch (Exception e) {
+            }
+        }
        user.setUsername(userDto.getFirstName() + " " + userDto.getLastName());
        user.setEmail(userDto.getEmail());
        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
        
-
        
-
+       
        Role role = roleRepository.findByName("ROLE_USER");
        user.setRoles(List.of(role));
        
        userRepository.save(user);
+       if (!profileImage.isEmpty()) {
+           profileImageService.saveImageOnDb(url, user);
+           System.out.println("immagine salvata");
+       }
 
        authenticateUserAndSetSession(user,userDto, request);
     }

@@ -92,6 +92,7 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
         String url = "";
         updateArticle.setId(key);
         Article article = articleRepository.findById(key).get();
+        updateArticle.setUser(article.getUser());
 
         if (!file.isEmpty()) {
             try {
@@ -203,6 +204,11 @@ public class ArticleService implements CrudService<ArticleDto, Article, Long> {
     public void addComment(Long id, Comment comment, Principal principal) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addComment'");
+    }
+
+    public void addLike(Long id, Principal principal) {
+       Article article=articleRepository.findById(id).get();
+       
     }
 
 }
